@@ -60,3 +60,8 @@ export ANDROID_HOME=/path/to/android-sdk
 
 当前版本 `1.0.1`（versionCode 3），开发中。欢迎通过 issue 反馈问题；提交 PR 前请确保
 `:app:testDebugUnitTest` 通过。
+
+## 许可证
+
+本项目使用 [MIT License](LICENSE)。
+

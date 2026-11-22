@@ -24,8 +24,10 @@ dist/
 *.ap_
 *.dex
 *.hprof
+output-metadata.json
 
 # Signing material and local secrets
+google-services.json
 *.jks
 *.keystore
 keystore.properties
