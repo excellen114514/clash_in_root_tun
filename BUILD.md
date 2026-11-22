@@ -46,8 +46,8 @@ BUILD SUCCESSFUL
 | 项目 | x86_64 | arm64-v8a |
 |---|---|---|
 | 路径 | `app\build\outputs\apk\x86\debug\app-x86-debug.apk` | `app\build\outputs\apk\arm64\debug\app-arm64-debug.apk` |
-| 大小 | 43,113,316 字节（41.12 MiB） | 40,715,954 字节（38.83 MiB） |
-| SHA-256 | `8D48BCA399E80C5C669E60561BB66A94978D6F836487FC1CA0D319C59902C510` | `824E142DF75A160E82D1EA0AB72DABCEAFBD85AE80FED3903B25A6AF52B2BCB7` |
+| 大小 | 42,678,208 字节（40.70 MiB） | 40,715,954 字节（38.83 MiB） |
+| SHA-256 | `648A8FA489FF4FAE7B261425E8E7EED595062F72B96A09CCF47E756422E0793B` | `824E142DF75A160E82D1EA0AB72DABCEAFBD85AE80FED3903B25A6AF52B2BCB7` |
 | 版本 | versionCode 4 / versionName 1.0.2-alpha | versionCode 4 / versionName 1.0.2-alpha |
 | 签名 | debug keystore | debug keystore |
 | ABI | `x86_64` | `arm64-v8a` |
