@@ -116,7 +116,7 @@ class RootShell(private val context: Context) {
         if (su == null) {
             val message = "系统中没有找到 su 可执行文件（${SU_CANDIDATES.joinToString()}）"
             LogBus.error(TAG, "未获得 Root 权限：$message")
-            LogBus.error(TAG, "MuMu 模拟器：请打开 设置 → 其他设置 → Root 权限，并重启模拟器")
+            LogBus.error(TAG, "请用 Magisk / KernelSU 等授予 su；模拟器需先在设置中开启 Root。Shizuku 不能替代 root 创建 TUN。")
             rememberRoot(false)
             return false
         }
@@ -167,7 +167,7 @@ class RootShell(private val context: Context) {
         if (!File(su).canExecute()) {
             LogBus.error(
                 TAG,
-                "当前 su 路径对应用 uid 不可执行。MuMu 请确认已在模拟器设置中开启 Root，并在授权框中选择「永久记住选择」",
+                "当前 su 路径对应用 uid 不可执行。请确认设备已 root 并在授权框中选择「永久记住选择」；模拟器需开启 Root",
             )
         }
         rememberRoot(false)

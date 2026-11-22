@@ -46,8 +46,8 @@ BUILD SUCCESSFUL
 | 项目 | x86_64 | arm64-v8a |
 |---|---|---|
 | 路径 | `app\build\outputs\apk\x86\debug\app-x86-debug.apk` | `app\build\outputs\apk\arm64\debug\app-arm64-debug.apk` |
-| 大小 | 42,734,984 字节（40.75 MiB） | 40,772,602 字节（38.88 MiB） |
-| SHA-256 | `0C3222348AF017CC82F2BCF16DB959827F2D4541DF1528BFFB0600C5A41EDA97` | `4953D5B14D3FB447D9CC960D3498F0556D28ED0E978ED08C036D87946223A845` |
+| 大小 | 42,734,916 字节（40.75 MiB） | 40,772,582 字节（38.88 MiB） |
+| SHA-256 | `B61A8DD7DAE4B823F933BE19ABA5A5B5074399EFD57D95A440F71DCA406F2A2A` | `0539A18B414CD9C746ED07FD6226A4609674061F10A9A6A0B0DE1585F71ABBB4` |
 | 版本 | versionCode 5 / versionName 1.0.2-beta | versionCode 5 / versionName 1.0.2-beta |
 | 签名 | debug keystore | debug keystore |
 | ABI | `x86_64` | `arm64-v8a` |
@@ -148,5 +148,16 @@ packaging {
   `Can't create handler inside thread ... that has not called Looper.prepare()`。
 - MuMu Android 12 实测：`TestNetworkManager 可用（API 32，uid=0）`，创建出 `testtun0` 并成功关闭；
   但该镜像 `TetheringManager.setPreferTestNetworks` 不可用，热点上游链路无法在 MuMu 验证。
+- 实机（无 root）实测 2026-11-22，设备 `caeb031`（Redmi 23073RPBFG / Evolution X / Android 14 / SDK 34）：
+  - Shizuku 13.6.0 以 **shell（uid=2000）** 运行，本应用授权后 `Shizuku UserService 已连接（uid=2000）`。
+  - `TestNetworkManager 可用（API 34，uid=2000）；setPreferTestNetworks=可用`，具备 Shizzi/HotspotXray 的完整前提。
+  - `创建测试 TUN` → `testtun0` / `testtun1` / `testtun2`（fd=58），`/sys/class/net` 可见；
+    `销毁` 后接口消失，可重复创建。
+  - 应用列表：正常时 PM 返回 648 个，Shizuku 交叉核对“没有发现额外应用”；
+    临时模拟包可见性受限（仅本应用）后，`Shizuku 补充 648 个应用`，`Root`/`Shizuku` 徽标、
+    工作模式、保存均正常，`@shizuku_list=true` 已持久化，重开列表自动走 Shizuku。
+  - 无 root 启动代理会提示“未获得 Root 权限 … Shizuku 不能替代 root”，不崩溃。
 - 该能力目前只做创建/销毁和兼容性探测，不把 TUN 接入代理；本地透明代理仍走 root。
 - 未安装 Shizuku 或不想使用 Shizuku 时，保持 root 应用列表/系统列表即可，不影响代理启动。
+- 无 root 提示文案已改为设备无关（Magisk / KernelSU / 模拟器开关），不再只针对 MuMu；
+  日志中的 su 失败提示同步修改。

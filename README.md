@@ -61,6 +61,8 @@ export ANDROID_HOME=/path/to/android-sdk
   本机 TUN 透明代理仍需 root（或改用 VpnService，本项目不使用）；ADB shell 也无法直接执行 `ip rule`/`iptables`。
 - MuMu Android 12 已实测可通过 Shizuku 创建/销毁 `testtun0`（`TestNetworkManager.createTunInterface`），但该镜像的
   `TetheringManager.setPreferTestNetworks` 不可用，因此热点上游链路未验证；不同 ROM 的 tethering 模块差异较大。
+- 无 root 实机（Evolution X / Android 14）已验证：Shizuku shell（uid=2000）可创建/销毁测试 TUN，
+  `setPreferTestNetworks` 可用；包可见性受限时 Shizuku 可补齐完整应用列表。
 
 ## 文档
 

@@ -241,7 +241,8 @@ private fun StatusCard(
                             fontWeight = FontWeight.SemiBold,
                         )
                         Text(
-                            "MuMu：设置 → 其他设置 → 开启 Root 权限并重启模拟器；首次启动代理时请在授权弹窗点击「允许」并勾选「永久记住选择」。",
+                            "本机 TUN 代理必须 root：请用 Magisk / KernelSU 等授予 su；模拟器（如 MuMu）需先在设置中开启 Root。" +
+                                "Shizuku 只能补充应用列表和创建测试 TUN，无法替代 root 接管本机流量。",
                             style = MaterialTheme.typography.bodySmall,
                             color = colorScheme.onSecondaryContainer,
                         )

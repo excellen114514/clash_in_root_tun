@@ -290,7 +290,8 @@ class ProxyCore private constructor(private val context: Context) {
             if (!rootShell.checkRoot(force = true)) {
                 _state.update { it.copy(rootGranted = false) }
                 throw IllegalStateException(
-                    "未获得 Root 权限，无法创建 TUN 设备。请在设备的 Root 管理器（MuMu：设置 → 开启 Root 权限）中授权后重试。",
+                    "未获得 Root 权限，无法创建 TUN 设备。请在设备的 Root 管理器（Magisk / KernelSU / 模拟器 Root 开关）中授权后重试；" +
+                        "Shizuku 不能替代 root 接管本机流量。",
                 )
             }
             _state.update { it.copy(rootGranted = true, detail = "释放 mihomo 内核…") }
