@@ -1,0 +1,189 @@
+2026-11-21 18:27:28.672 INFO/APP: 日志文件已就绪: /data/user/0/com.roottun.clash/files/clash/logs/app.log
+2026-11-21 18:27:28.682 INFO/APP: 应用启动：com.roottun.clash 1.0.0 (1)
+2026-11-21 18:27:28.690 INFO/APP: 设备：Xiaomi 2201123C / Android 12 (API 32) / ABI=x86_64
+2026-11-21 18:27:28.691 INFO/APP: 主题：Material 3 SPEC_2025（MaterialKolor 动态取色引擎）
+2026-11-21 18:27:28.706 INFO/CORE: RootTun Clash 1.0.0 初始化，包名=com.roottun.clash
+2026-11-21 18:27:28.707 INFO/CORE: 工作目录：/data/user/0/com.roottun.clash/files/clash
+2026-11-21 18:27:28.707 INFO/ROOT: su 路径：/system/bin/su（exists=true, canExecute=true）
+2026-11-21 18:27:28.708 INFO/ROOT: 请求 Root 权限（如出现授权弹窗，请在设备上点击「允许」）…
+2026-11-21 18:27:28.753 INFO/APP: MainActivity onCreate
+2026-11-21 18:27:28.938 INFO/ROOT: Root 检查通过：uid=0(root) gid=0(root) groups=0(root) context=u:r:su:s0（su -c 通道）
+2026-11-21 18:27:29.067 INFO/ROOT: libsu Shell 已就绪（Shell.isRoot=true），优先使用 libsu 执行命令
+2026-11-21 18:27:29.068 INFO/CORE: Root 通道：libsu Shell
+2026-11-21 18:27:29.084 DEBUG/ROOT: exit=1（17ms）
+2026-11-21 18:27:29.086 INFO/TUN: 开始回滚 iptables / 策略路由（tun=mihomo0）…
+2026-11-21 18:27:29.093 DEBUG/TUN: exit=2（6ms）
+2026-11-21 18:27:29.098 DEBUG/TUN: exit=2（4ms）
+2026-11-21 18:27:29.101 DEBUG/TUN: exit=2（2ms）
+2026-11-21 18:27:29.104 DEBUG/TUN: exit=0（3ms）
+2026-11-21 18:27:29.106 DEBUG/TUN: exit=0（2ms）
+2026-11-21 18:27:29.115 DEBUG/TUN: exit=0（8ms）
+2026-11-21 18:27:29.125 DEBUG/TUN: exit=2（10ms）
+2026-11-21 18:27:29.128 DEBUG/TUN: exit=2（2ms）
+2026-11-21 18:27:29.131 DEBUG/TUN: exit=2（2ms）
+2026-11-21 18:27:29.146 DEBUG/TUN: exit=2（14ms）
+2026-11-21 18:27:29.161 DEBUG/TUN: exit=0（14ms）
+2026-11-21 18:27:29.164 DEBUG/TUN: exit=0（3ms）
+2026-11-21 18:27:29.167 DEBUG/TUN: exit=0（2ms）
+2026-11-21 18:27:29.180 DEBUG/TUN: exit=0（13ms）
+2026-11-21 18:27:29.181 INFO/TUN: iptables / 策略路由回滚完成
+2026-11-21 18:28:16.246 INFO/SUBSCRIPTION: 已添加 URL 订阅「<机场域名>/<订阅token>」→ https://<机场域名>/s/<订阅token>
+2026-11-21 18:28:16.256 INFO/SUBSCRIPTION: 拉取订阅「<机场域名>/<订阅token>」：https://<机场域名>/s/<订阅token>（UA=ClashMetaForAndroid/2.11.7.Meta）
+2026-11-21 18:28:17.405 INFO/SUBSCRIPTION: HTTP 200 ← https://<机场域名>/s/<订阅token>（UA=ClashMetaForAndroid/2.11.7.Meta，Content-Type=text/yaml; charset=UTF-8）
+2026-11-21 18:28:17.406 DEBUG/SUBSCRIPTION: 响应为 gzip 编码，自动解压
+2026-11-21 18:28:17.410 INFO/SUBSCRIPTION: 下载完成：35114 字节，字符集=UTF-8，最终 URL=https://<机场域名>/s/<订阅token>
+2026-11-21 18:28:17.423 INFO/SUBSCRIPTION: 订阅「<机场域名>/<订阅token>」更新成功：67 个节点（UA=ClashMetaForAndroid/2.11.7.Meta）
+2026-11-21 18:28:36.552 INFO/CORE: 步骤 1/7：检查 Root 权限
+2026-11-21 18:28:36.553 INFO/ROOT: su 路径：/system/bin/su（exists=true, canExecute=true）
+2026-11-21 18:28:36.554 INFO/ROOT: 请求 Root 权限（如出现授权弹窗，请在设备上点击「允许」）…
+2026-11-21 18:28:36.758 INFO/ROOT: Root 检查通过：uid=0(root) gid=0(root) groups=0(root) context=u:r:su:s0（su -c 通道）
+2026-11-21 18:28:36.889 INFO/ROOT: libsu Shell 已就绪（Shell.isRoot=true），优先使用 libsu 执行命令
+2026-11-21 18:28:36.890 INFO/CORE: 步骤 2/7：准备 mihomo 内核与地理数据库
+2026-11-21 18:28:36.890 INFO/MIHOMO: 设备 ABI=x86_64, arm64-v8a, x86, armeabi-v7a, armeabi, 首选=x86_64
+2026-11-21 18:28:36.891 INFO/MIHOMO: 释放内核：/data/app/~~goPoRoMypAx47SCUNWjrJQ==/com.roottun.clash-wFjhIbqCtuW240CC9o2F-A==/lib/x86_64/libmihomo.so → /data/user/0/com.roottun.clash/files/clash/mihomo/mihomo（65 MiB）
+2026-11-21 18:28:37.016 INFO/MIHOMO: 已释放 geoip.metadb（8434612 bytes）
+2026-11-21 18:28:37.033 INFO/MIHOMO: 已释放 geosite.dat（4349121 bytes）
+2026-11-21 18:28:37.034 INFO/MIHOMO: $ chmod 700 '/data/user/0/com.roottun.clash/files/clash/mihomo/mihomo' && ls -l '/data/user/0/com.roottun.clash/files/clash/mihomo/mihomo'
+2026-11-21 18:28:37.047 INFO/MIHOMO: -rwx------ 1 u0_a20 u0_a20 68731248 2026-11-21 18:28 /data/user/0/com.roottun.clash/files/clash/mihomo/mihomo
+2026-11-21 18:28:37.048 DEBUG/MIHOMO: exit=0（13ms）
+2026-11-21 18:28:37.049 INFO/MIHOMO: $ '/data/user/0/com.roottun.clash/files/clash/mihomo/mihomo' -v 2>&1
+2026-11-21 18:28:37.061 INFO/MIHOMO: Mihomo Meta v1.19.34 android amd64 with go1.26.11 Wed Nov 11 06:51:48 UTC 2026
+2026-11-21 18:28:37.061 INFO/MIHOMO: Use tags: with_gvisor
+2026-11-21 18:28:37.062 DEBUG/MIHOMO: exit=0（12ms）
+2026-11-21 18:28:37.062 INFO/MIHOMO: mihomo 内核就绪：Mihomo Meta v1.19.34 android amd64 with go1.26.11 Wed Nov 11 06:51:48 UTC 2026（本次释放）
+2026-11-21 18:28:37.062 INFO/CORE: 步骤 3/7：准备订阅配置
+2026-11-21 18:28:37.063 INFO/CORE: 使用活动订阅「<机场域名>/<订阅token>」的本地缓存
+2026-11-21 18:28:37.063 INFO/CORE: 步骤 4/7：写入并校验 mihomo 配置
+2026-11-21 18:28:37.072 INFO/CORE: 配置已写入 /data/user/0/com.roottun.clash/files/clash/mihomo/config.yaml（30494 字符，67 个节点，stack=gvisor）
+2026-11-21 18:28:37.073 INFO/MIHOMO: $ '/data/user/0/com.roottun.clash/files/clash/mihomo/mihomo' -t -d '/data/user/0/com.roottun.clash/files/clash/mihomo' -f '/data/user/0/com.roottun.clash/files/clash/mihomo/config.yaml' 2>&1
+2026-11-21 18:28:37.097 INFO/MIHOMO: time="2026-11-21T18:28:37.086783988+08:00" level=info msg="Start initial configuration in progress"
+2026-11-21 18:28:37.098 INFO/MIHOMO: time="2026-11-21T18:28:37.095599295+08:00" level=info msg="Geodata Loader mode: memconservative"
+2026-11-21 18:28:37.098 INFO/MIHOMO: time="2026-11-21T18:28:37.095623767+08:00" level=info msg="Geosite Matcher implementation: succinct"
+2026-11-21 18:28:37.099 INFO/MIHOMO: time="2026-11-21T18:28:37.096164667+08:00" level=info msg="Initial configuration complete, total time: 9ms"
+2026-11-21 18:28:37.099 INFO/MIHOMO: configuration file /data/user/0/com.roottun.clash/files/clash/mihomo/config.yaml test is successful
+2026-11-21 18:28:37.099 DEBUG/MIHOMO: exit=0（23ms）
+2026-11-21 18:28:37.100 INFO/CORE: mihomo 配置校验通过
+2026-11-21 18:28:37.100 INFO/CORE: 步骤 5/7：准备 TUN 设备节点
+2026-11-21 18:28:37.100 INFO/TUN: $ sh '/data/user/0/com.roottun.clash/files/clash/scripts/ensure_tun.sh'
+2026-11-21 18:28:37.109 INFO/TUN: lrwxrwxrwx 1 root root 6 2026-11-21 17:22 /dev/net/tun -> ../tun
+2026-11-21 18:28:37.109 INFO/TUN: TUN_OK
+2026-11-21 18:28:37.110 DEBUG/TUN: exit=0（8ms）
+2026-11-21 18:28:37.110 INFO/TUN: /dev/net/tun 可用（节点已存在）
+2026-11-21 18:28:37.110 INFO/CORE: 步骤 6/7：启动 mihomo 内核
+2026-11-21 18:28:37.111 INFO/MIHOMO: 启动命令：echo $$ > '/data/user/0/com.roottun.clash/files/clash/mihomo/mihomo.pid'; cd '/data/user/0/com.roottun.clash/files/clash/mihomo'; exec '/data/user/0/com.roottun.clash/files/clash/mihomo/mihomo' -d '/data/user/0/com.roottun.clash/files/clash/mihomo' -f '/data/user/0/com.roottun.clash/files/clash/mihomo/config.yaml'
+2026-11-21 18:28:37.111 INFO/MIHOMO: $ su -c echo $$ > '/data/user/0/com.roottun.clash/files/clash/mihomo/mihomo.pid'; cd '/data/user/0/com.roottun.clash/files/clash/mihomo'; exec '/data/user/0/com.roottun…
+2026-11-21 18:28:37.120 DEBUG/MIHOMO: exit=0（8ms）
+2026-11-21 18:28:37.245 INFO/MIHOMO: time="2026-11-21T18:28:37.245182331+08:00" level=info msg="Start initial configuration in progress"
+2026-11-21 18:28:37.254 INFO/MIHOMO: time="2026-11-21T18:28:37.254821300+08:00" level=info msg="Geodata Loader mode: memconservative"
+2026-11-21 18:28:37.255 INFO/MIHOMO: time="2026-11-21T18:28:37.254838802+08:00" level=info msg="Geosite Matcher implementation: succinct"
+2026-11-21 18:28:37.255 INFO/MIHOMO: time="2026-11-21T18:28:37.254941865+08:00" level=info msg="Initial configuration complete, total time: 9ms"
+2026-11-21 18:28:37.256 INFO/MIHOMO: time="2026-11-21T18:28:37.256111531+08:00" level=info msg="RESTful API listening at: 127.0.0.1:9090"
+2026-11-21 18:28:37.257 INFO/MIHOMO: time="2026-11-21T18:28:37.256897719+08:00" level=info msg="Sniffer is loaded and working"
+2026-11-21 18:28:37.257 INFO/MIHOMO: time="2026-11-21T18:28:37.256909040+08:00" level=info msg="Use tcp concurrent"
+2026-11-21 18:28:37.257 INFO/MIHOMO: time="2026-11-21T18:28:37.256937200+08:00" level=info msg="NTP service start, sync system time is false"
+2026-11-21 18:28:37.258 INFO/MIHOMO: time="2026-11-21T18:28:37.257162162+08:00" level=info msg="DNS server(UDP) listening at: [::]:1053"
+2026-11-21 18:28:37.258 INFO/MIHOMO: time="2026-11-21T18:28:37.257206570+08:00" level=info msg="DNS server(TCP) listening at: [::]:1053"
+2026-11-21 18:28:37.259 INFO/MIHOMO: time="2026-11-21T18:28:37.257624256+08:00" level=info msg="Mixed(http+socks) proxy listening at: 127.0.0.1:7890"
+2026-11-21 18:28:37.259 INFO/MIHOMO: time="2026-11-21T18:28:37.258369708+08:00" level=warning msg="[TUN] default interface changed by monitor, => wlan0"
+2026-11-21 18:28:37.261 INFO/MIHOMO: time="2026-11-21T18:28:37.261317735+08:00" level=info msg="[TUN] Tun adapter listening at: mihomo0([198.18.0.1/30],[]), mtu: 9000, auto route: true, auto redir: false, ip stack: gVisor, dns mode: "
+2026-11-21 18:28:37.261 INFO/MIHOMO: time="2026-11-21T18:28:37.261549339+08:00" level=info msg="Start initial compatible provider 自动选择"
+2026-11-21 18:28:37.263 INFO/MIHOMO: time="2026-11-21T18:28:37.263256974+08:00" level=info msg="Start initial compatible provider jp自动切换"
+2026-11-21 18:28:37.264 INFO/MIHOMO: time="2026-11-21T18:28:37.263560776+08:00" level=info msg="Start initial compatible provider us自动切换"
+2026-11-21 18:28:37.264 INFO/MIHOMO: time="2026-11-21T18:28:37.263643512+08:00" level=info msg="Start initial compatible provider 主代理"
+2026-11-21 18:28:37.267 INFO/MIHOMO: time="2026-11-21T18:28:37.263663083+08:00" level=info msg="Start initial compatible provider 套餐详情"
+2026-11-21 18:28:37.268 INFO/MIHOMO: time="2026-11-21T18:28:37.263668843+08:00" level=info msg="Start initial compatible provider default"
+2026-11-21 18:28:37.268 INFO/MIHOMO: time="2026-11-21T18:28:37.263676369+08:00" level=info msg="Start initial compatible provider 国内直连"
+2026-11-21 18:28:37.268 INFO/MIHOMO: time="2026-11-21T18:28:37.265256030+08:00" level=info msg="Start initial compatible provider 负载均衡"
+2026-11-21 18:28:37.268 INFO/MIHOMO: time="2026-11-21T18:28:37.265356869+08:00" level=info msg="Start initial provider China-Site"
+2026-11-21 18:28:37.269 INFO/MIHOMO: time="2026-11-21T18:28:37.265687319+08:00" level=info msg="Start initial provider Local-IP"
+2026-11-21 18:28:37.269 INFO/MIHOMO: time="2026-11-21T18:28:37.266341598+08:00" level=info msg="Start initial provider China-IP"
+2026-11-21 18:28:37.291 INFO/MIHOMO: time="2026-11-21T18:28:37.291623494+08:00" level=info msg="[TCP] mihomo --> cdn.jsdmirror.com:443 using DIRECT"
+2026-11-21 18:28:37.293 INFO/MIHOMO: time="2026-11-21T18:28:37.293286355+08:00" level=info msg="[TCP] mihomo --> cdn.jsdmirror.com:443 using DIRECT"
+2026-11-21 18:28:37.295 INFO/MIHOMO: time="2026-11-21T18:28:37.295115912+08:00" level=info msg="[TCP] mihomo --> cdn.jsdmirror.com:443 using DIRECT"
+2026-11-21 18:28:37.314 INFO/MIHOMO: time="2026-11-21T18:28:37.314303077+08:00" level=info msg="System clock is ahead of NTP time by 69.241352ms"
+2026-11-21 18:28:37.430 DEBUG/MIHOMO: exit=0（7ms）
+2026-11-21 18:28:37.439 DEBUG/MIHOMO: exit=0（9ms）
+2026-11-21 18:28:37.440 INFO/MIHOMO: 内核就绪：pid=9826, stack=gvisor, controller=127.0.0.1:9090, tun=mihomo0
+2026-11-21 18:28:37.440 INFO/CORE: 步骤 7/7：检查并接管策略路由
+2026-11-21 18:28:37.441 INFO/TUN: $ ip rule show 2>&1
+2026-11-21 18:28:37.444 DEBUG/TUN: exit=0（3ms）
+2026-11-21 18:28:37.445 INFO/TUN: 策略路由检查：mihomo auto-route 已接管，无需手工规则
+2026-11-21 18:28:37.452 DEBUG/TUN: exit=0（6ms）
+2026-11-21 18:28:37.453 INFO/CORE: 检测到 mihomo auto-route 策略路由（fwmark 0x2023 / table 2022）
+2026-11-21 18:28:37.459 DEBUG/TUN: exit=2（6ms）
+2026-11-21 18:28:37.462 DEBUG/TUN: exit=2（2ms）
+2026-11-21 18:28:37.465 DEBUG/TUN: exit=2（2ms）
+2026-11-21 18:28:37.473 DEBUG/TUN: exit=0（8ms）
+2026-11-21 18:28:37.474 INFO/TUN: $ ip rule add pref 8100 uidrange 10020-10020 lookup 'wlan0'
+2026-11-21 18:28:37.478 DEBUG/TUN: exit=0（4ms）
+2026-11-21 18:28:37.480 DEBUG/TUN: exit=0（2ms）
+2026-11-21 18:28:37.481 INFO/TUN: 已为应用自身（uid=10020）添加绕过 TUN 的策略路由：lookup wlan0（pref 8100）
+2026-11-21 18:28:37.483 DEBUG/CORE: 前台保活服务已启动
+2026-11-21 18:28:37.486 INFO/CORE: 代理已启动：TUN=mihomo0, stack=gvisor, pid=9826, mixed-port=7890, controller=127.0.0.1:9090
+2026-11-21 18:28:37.491 DEBUG/SERVICE: 前台服务已进入前台
+2026-11-21 18:28:37.497 INFO/NODES: 已读取 8 个策略组、81 个节点/分组
+2026-11-21 18:28:50.609 INFO/MIHOMO: time="2026-11-21T18:28:50.609103955+08:00" level=error msg="中转线路2-马来01 failed to get the second response from http://www.gstatic.com/generate_204: Head \"http://www.gstatic.com/generate_204\": context deadline exceeded"
+2026-11-21 18:28:50.611 INFO/MIHOMO: time="2026-11-21T18:28:50.609134554+08:00" level=warning msg="It is recommended to use HTTPS for provider.health-check.url and group.url to ensure better reliability. Due to some proxy providers hijacking test addresses and not being compatible with repeated HEAD requests, using HTTP may result in failed tests."
+2026-11-21 18:28:58.477 INFO/NODES: 已读取 8 个策略组、81 个节点/分组
+2026-11-21 18:29:22.393 INFO/NODES: 策略组「主代理」已切换为「DIRECT」
+2026-11-21 18:29:33.984 INFO/CORE: 开始停止代理（用户停止）
+2026-11-21 18:29:33.985 INFO/TUN: 开始回滚 iptables / 策略路由（tun=mihomo0）…
+2026-11-21 18:29:34.001 DEBUG/TUN: exit=0（16ms）
+2026-11-21 18:29:34.004 DEBUG/TUN: exit=2（3ms）
+2026-11-21 18:29:34.007 DEBUG/TUN: exit=2（2ms）
+2026-11-21 18:29:34.010 DEBUG/TUN: exit=0（3ms）
+2026-11-21 18:29:34.012 DEBUG/TUN: exit=0（2ms）
+2026-11-21 18:29:34.015 DEBUG/TUN: exit=0（2ms）
+2026-11-21 18:29:34.018 DEBUG/TUN: exit=2（2ms）
+2026-11-21 18:29:34.021 DEBUG/TUN: exit=2（1ms）
+2026-11-21 18:29:34.023 DEBUG/TUN: exit=2（2ms）
+2026-11-21 18:29:34.025 DEBUG/TUN: exit=2（2ms）
+2026-11-21 18:29:34.027 DEBUG/TUN: exit=0（1ms）
+2026-11-21 18:29:34.029 DEBUG/TUN: exit=0（1ms）
+2026-11-21 18:29:34.033 DEBUG/TUN: exit=0（3ms）
+2026-11-21 18:29:34.033 INFO/TUN: iptables / 策略路由回滚完成
+2026-11-21 18:29:34.034 INFO/MIHOMO: 终止进程 pid=9826
+2026-11-21 18:29:34.035 DEBUG/MIHOMO: exit=0（1ms）
+2026-11-21 18:29:34.036 DEBUG/MIHOMO: exit=0（1ms）
+2026-11-21 18:29:34.069 INFO/MIHOMO: time="2026-11-21T18:29:34.067099900+08:00" level=warning msg="Mihomo shutting down"
+2026-11-21 18:29:34.116 WARN/MIHOMO: mihomo 进程已退出（exit=0）
+2026-11-21 18:29:34.117 DEBUG/CORE: 内核退出事件被忽略（当前状态 STOPPING）
+2026-11-21 18:29:34.238 DEBUG/MIHOMO: exit=1（2ms）
+2026-11-21 18:29:34.240 INFO/MIHOMO: 进程 pid=9826 已退出
+2026-11-21 18:29:34.242 INFO/MIHOMO: mihomo 内核已停止
+2026-11-21 18:29:34.259 DEBUG/TUN: exit=0（15ms）
+2026-11-21 18:29:34.260 DEBUG/SERVICE: 前台服务已销毁
+2026-11-21 18:29:34.261 INFO/CORE: 代理已停止，iptables / 策略路由已回滚
+2026-11-21 18:29:48.117 INFO/LOG: 日志已导出到 Download/RootTunClash/RootTunClash-log-20261121-182948.log（15925 字节）
+2026-11-21 18:30:08.339 INFO/APP: 日志文件已就绪: /data/user/0/com.roottun.clash/files/clash/logs/app.log
+2026-11-21 18:30:08.348 INFO/APP: 应用启动：com.roottun.clash 1.0.0 (1)
+2026-11-21 18:30:08.357 INFO/APP: 设备：Xiaomi 2201123C / Android 12 (API 32) / ABI=x86_64
+2026-11-21 18:30:08.358 INFO/APP: 主题：Material 3 SPEC_2025（MaterialKolor 动态取色引擎）
+2026-11-21 18:30:08.364 INFO/SUBSCRIPTION: 已载入 1 个订阅，活动订阅=<机场域名>/<订阅token>
+2026-11-21 18:30:08.375 INFO/CORE: RootTun Clash 1.0.0 初始化，包名=com.roottun.clash
+2026-11-21 18:30:08.375 INFO/CORE: 工作目录：/data/user/0/com.roottun.clash/files/clash
+2026-11-21 18:30:08.376 INFO/ROOT: su 路径：/system/bin/su（exists=true, canExecute=true）
+2026-11-21 18:30:08.376 INFO/ROOT: 请求 Root 权限（如出现授权弹窗，请在设备上点击「允许」）…
+2026-11-21 18:30:08.415 INFO/APP: MainActivity onCreate
+2026-11-21 18:30:08.594 INFO/ROOT: Root 检查通过：uid=0(root) gid=0(root) groups=0(root) context=u:r:su:s0（su -c 通道）
+2026-11-21 18:30:08.724 INFO/ROOT: libsu Shell 已就绪（Shell.isRoot=true），优先使用 libsu 执行命令
+2026-11-21 18:30:08.725 INFO/CORE: Root 通道：libsu Shell
+2026-11-21 18:30:08.733 DEBUG/ROOT: exit=1（8ms）
+2026-11-21 18:30:08.735 INFO/TUN: 开始回滚 iptables / 策略路由（tun=mihomo0）…
+2026-11-21 18:30:08.738 DEBUG/TUN: exit=2（2ms）
+2026-11-21 18:30:08.740 DEBUG/TUN: exit=2（2ms）
+2026-11-21 18:30:08.743 DEBUG/TUN: exit=2（2ms）
+2026-11-21 18:30:08.746 DEBUG/TUN: exit=0（2ms）
+2026-11-21 18:30:08.749 DEBUG/TUN: exit=0（3ms）
+2026-11-21 18:30:08.752 DEBUG/TUN: exit=0（2ms）
+2026-11-21 18:30:08.754 DEBUG/TUN: exit=2（2ms）
+2026-11-21 18:30:08.757 DEBUG/TUN: exit=2（3ms）
+2026-11-21 18:30:08.760 DEBUG/TUN: exit=2（3ms）
+2026-11-21 18:30:08.762 DEBUG/TUN: exit=2（2ms）
+2026-11-21 18:30:08.777 DEBUG/TUN: exit=0（14ms）
+2026-11-21 18:30:08.780 DEBUG/TUN: exit=0（2ms）
+2026-11-21 18:30:08.786 DEBUG/TUN: exit=0（4ms）
+2026-11-21 18:30:08.795 DEBUG/TUN: exit=0（9ms）
+2026-11-21 18:30:08.795 INFO/TUN: iptables / 策略路由回滚完成
+2026-11-21 18:30:19.342 INFO/LOG: 日志已导出到 Download/RootTunClash/RootTunClash-log-20261121-183019.txt（2425 字节）
+2026-11-21 18:30:40.182 INFO/LOG: 日志已导出到 Download/RootTunClash/RootTunClash-log-20261121-183040.txt（2554 字节）

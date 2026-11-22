@@ -1,0 +1,2 @@
+﻿VPNs:
+  0: [Legacy VPN]

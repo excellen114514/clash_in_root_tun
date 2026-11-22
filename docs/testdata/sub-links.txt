@@ -1,0 +1,5 @@
+ss://YWVzLTEyOC1nY206dGVzdC1wYXNz@127.0.0.1:18392#测试-SS节点
+trojan://trojan-pass@127.0.0.1:18443?sni=example.com&allowInsecure=1#测试-Trojan节点
+vmess://eyJ2IjoiMiIsInBzIjoi5rWL6K+VLVZNZXNz6IqC54K5IiwiYWRkIjoiMTI3LjAuMC4xIiwicG9ydCI6IjE4NDQ0IiwiaWQiOiJiODMxMzgxZC02MzI0LTRkNTMtYWQ0Zi04Y2RhNDhiMzA4MTEiLCJhaWQiOiIwIiwic2N5IjoiYXV0byIsIm5ldCI6IndzIiwidHlwZSI6Im5vbmUiLCJob3N0IjoiZXhhbXBsZS5jb20iLCJwYXRoIjoiL3dzIiwidGxzIjoidGxzIiwic25pIjoiZXhhbXBsZS5jb20ifQ==
+vless://11111111-2222-3333-4444-555555555555@127.0.0.1:18445?encryption=none&security=tls&sni=example.com&type=ws&path=%2Fvless#测试-VLESS节点
+hysteria2://hy2pass@127.0.0.1:18446?sni=example.com&insecure=1#测试-Hy2节点

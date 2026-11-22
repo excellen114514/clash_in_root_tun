@@ -1,0 +1,47 @@
+# Gradle / Android
+.gradle/
+.kotlin/
+build/
+**/build/
+local.properties
+.idea/
+*.iml
+.cxx/
+.externalNativeBuild/
+captures/
+
+# Bundled Android SDK / local environment
+android-sdk/
+.venv/
+venv/
+env/
+node_modules/
+
+# Build outputs / release artifacts
+dist/
+*.apk
+*.aab
+*.ap_
+*.dex
+*.hprof
+
+# Signing material and local secrets
+*.jks
+*.keystore
+keystore.properties
+secrets.properties
+.env
+
+# Logs / temporary files
+/build-log.txt
+*.tmp
+*.part
+.DS_Store
+Thumbs.db
+
+# Local portable tools used only on this machine
+tools/portable-git/
+tools/portable-gh/
+
+# Agent / workbuddy scratch
+.workbuddy-ai/

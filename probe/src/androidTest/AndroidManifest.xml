@@ -1,0 +1,3 @@
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <instrumentation android:name="com.roottun.probe.TransferInstrumentation" android:targetPackage="com.roottun.probe" android:label="Local transfer fixture" />
+</manifest>
