@@ -15,7 +15,7 @@ VPN 连接。
 - mihomo TUN 接管；root 检查、启动事务与失败回滚
 - Clash YAML / base64 / 分享链接订阅；多 User-Agent 兼容
 - 节点策略组读取、切换与测速
-- 应用分流：系统应用列表、root 兜底列表、系统/用户标识与图标、白名单/黑名单、单应用三态
+- 应用分流：系统应用列表、root / Shizuku 兜底列表、系统/用户标识与图标、白名单/黑名单、单应用三态
 - 主页面流量卡片；可在通知栏显示累计流量与速率
 - mihomo 官方稳定版检查、SHA-256 校验、下次启动切换与旧版回退
 - 日志控制台、级别过滤与日志导出
@@ -26,6 +26,7 @@ TUN 接口（`net0`）仍可被系统枚举；本项目不承诺接口级完全�
 
 - Android 8.0+（minSdk 26），需要 root（`su`）
 - JDK 17，Android SDK Platform 35 / Build-Tools 35.0.0
+- 可选：已安装并运行的 Shizuku（仅用于补充应用列表，不能替代 root）
 - 仓库内自带 `arm64-v8a` / `x86_64` 的 mihomo v1.19.34 与 geodata；构建时按 ABI 拆分，每个 APK 只包含一个内核
 
 ## 构建
@@ -55,6 +56,7 @@ export ANDROID_HOME=/path/to/android-sdk
 - 白名单模式固定使用订阅中首个受支持的静态远端节点，暂不跟随策略组选择。
 - 设备验收以 TCP 为主；UDP / QUIC 尚未做完整端到端覆盖。
 - 未实现 TUN 接口级隐藏，目标应用仍可枚举 `net0`。
+- Shizuku 仅用于补充应用列表；ADB shell 权限无法创建 TUN/路由，TUN 代理仍必须 root（或改用 VpnService，本项目不使用）。
 
 ## 文档
 
@@ -65,7 +67,7 @@ export ANDROID_HOME=/path/to/android-sdk
 
 ## 状态
 
-当前版本 `1.0.2-alpha`（versionCode 4），开发中。欢迎通过 issue 反馈问题；提交 PR 前请确保
+当前版本 `1.0.2-beta`（versionCode 5），开发中。欢迎通过 issue 反馈问题；提交 PR 前请确保
 `:app:testX86DebugUnitTest` 通过。
 
 ## 许可证

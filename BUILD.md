@@ -46,9 +46,9 @@ BUILD SUCCESSFUL
 | 项目 | x86_64 | arm64-v8a |
 |---|---|---|
 | 路径 | `app\build\outputs\apk\x86\debug\app-x86-debug.apk` | `app\build\outputs\apk\arm64\debug\app-arm64-debug.apk` |
-| 大小 | 42,678,208 字节（40.70 MiB） | 40,715,954 字节（38.83 MiB） |
-| SHA-256 | `648A8FA489FF4FAE7B261425E8E7EED595062F72B96A09CCF47E756422E0793B` | `824E142DF75A160E82D1EA0AB72DABCEAFBD85AE80FED3903B25A6AF52B2BCB7` |
-| 版本 | versionCode 4 / versionName 1.0.2-alpha | versionCode 4 / versionName 1.0.2-alpha |
+| 大小 | 42,718,196 字节（40.74 MiB） | 40,755,882 字节（38.87 MiB） |
+| SHA-256 | `FA9E78A11C186C504C645ED899EF4F6A8747330D48267D4F16180605444FF6B0` | `9FF097F2323C7AD761C73C7424979FBA8C8DA3A2049602087B21989DE53C613D` |
+| 版本 | versionCode 5 / versionName 1.0.2-beta | versionCode 5 / versionName 1.0.2-beta |
 | 签名 | debug keystore | debug keystore |
 | ABI | `x86_64` | `arm64-v8a` |
 | 内置资源 | `geoip.metadb` / `geosite.dat` | `geoip.metadb` / `geosite.dat` |
@@ -130,3 +130,12 @@ packaging {
   （mihomo 是预编译 Go 二进制，不需要 strip，打包时按原样保留）；
 - `processX86DebugMainManifest` / `processArm64DebugMainManifest` 可能提示
   `android:extractNativeLibs should not be specified ...`，属于 AGP 的建议性警告，不影响本项目的可执行内核策略。
+
+## 7. Shizuku（可选）
+
+- 依赖：`dev.rikka.shizuku:api:13.1.5`、`dev.rikka.shizuku:provider:13.1.5`。
+- Manifest 注册 `rikka.shizuku.ShizukuProvider`，authority 为 `${applicationId}.shizuku`。
+- 通过 `ShizukuUserService`（AIDL）在 Shizuku 的 root/shell 进程里执行 `pm list packages`，用于包可见性受限时补充应用列表。
+- **TUN 仍必须 root**：ADB shell 身份没有 `CAP_NET_ADMIN`，且 `/dev/tun` 是 `system:vpn` 0660；
+  实测 `ip rule add` 为 `Operation not permitted`，`ip tuntap add` 为 `Permission denied`。
+- 未安装 Shizuku 或不想使用 Shizuku 时，保持 root 应用列表/系统列表即可，不影响代理启动。

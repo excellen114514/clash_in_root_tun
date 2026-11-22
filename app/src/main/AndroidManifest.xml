@@ -52,6 +52,15 @@
                 android:value="Keeps the user-started root TUN proxy kernel alive while the UI is in background" />
         </service>
 
+        <!-- Shizuku permission bridge; only used for the optional app-list fallback. -->
+        <provider
+            android:name="rikka.shizuku.ShizukuProvider"
+            android:authorities="${applicationId}.shizuku"
+            android:enabled="true"
+            android:exported="true"
+            android:multiprocess="false"
+            android:permission="android.permission.INTERACT_ACROSS_USERS_FULL" />
+
     </application>
 
 </manifest>

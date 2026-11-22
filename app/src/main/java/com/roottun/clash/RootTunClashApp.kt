@@ -6,6 +6,7 @@ import com.roottun.clash.core.AppSettings
 import com.roottun.clash.core.LogBus
 import com.roottun.clash.core.MihomoUpdates
 import com.roottun.clash.core.ProxyCore
+import com.roottun.clash.core.ShizukuManager
 import com.roottun.clash.core.Workspace
 import java.io.File
 
@@ -26,6 +27,7 @@ class RootTunClashApp : Application() {
                 "(API ${Build.VERSION.SDK_INT}) / ABI=${Build.SUPPORTED_ABIS.firstOrNull() ?: "unknown"}",
         )
         LogBus.info("APP", "主题已加载（动态取色引擎）")
+        ShizukuManager.init(this)
         MihomoUpdates.init(this)
         ProxyCore.get(this).init()
     }

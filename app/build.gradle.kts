@@ -15,8 +15,8 @@ android {
         applicationId = "com.roottun.clash"
         minSdk = 26
         targetSdk = 35
-        versionCode = 4
-        versionName = "1.0.2-alpha"
+        versionCode = 5
+        versionName = "1.0.2-beta"
     }
 
     // 每个 APK 只携带一个 ABI 对应的 mihomo 内核，避免 universal APK 同时打包两份内核。
@@ -66,6 +66,7 @@ android {
     buildFeatures {
         compose = true
         buildConfig = true
+        aidl = true
     }
 
     packaging {
@@ -117,9 +118,14 @@ dependencies {
 
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.10.2")
 
-    // Root shell (libsu core): the only privileged command channel of this app.
+    // Root shell (libsu core): the only privileged command channel for TUN/routing.
     // JitPack coordinates: com.github.<owner>.<repo>:<module>:<version>
     implementation("com.github.topjohnwu.libsu:core:5.2.2")
+
+    // Shizuku: app-list fallback via a root/shell UserService. Shizuku cannot
+    // replace root for TUN because ADB shell lacks CAP_NET_ADMIN and /dev/tun access.
+    implementation("dev.rikka.shizuku:api:13.1.5")
+    implementation("dev.rikka.shizuku:provider:13.1.5")
 
     // MaterialKolor's Material 3 color engine (SPEC_2025 dynamic schemes).
     implementation("com.materialkolor:material-color-utilities:4.0.5")

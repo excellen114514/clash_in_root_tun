@@ -306,6 +306,7 @@ class ProxyCore private constructor(private val context: Context) {
                     context,
                     rootShell,
                     AppRoutingPolicy.rootListEnabled(context),
+                    AppRoutingPolicy.shizukuListEnabled(context),
                 ),
             )
             // 3) 准备订阅配置（没有订阅时使用内置 DIRECT 自检配置）。

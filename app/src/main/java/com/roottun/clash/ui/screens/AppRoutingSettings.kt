@@ -56,6 +56,7 @@ import com.roottun.clash.core.AppRoute
 import com.roottun.clash.core.AppRoutingMode
 import com.roottun.clash.core.AppRoutingPolicy
 import com.roottun.clash.core.ProxyCore
+import com.roottun.clash.core.ShizukuManager
 import com.roottun.clash.ui.theme.AppIcons
 import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
@@ -76,11 +77,23 @@ internal fun AppRoutingSettings(core: ProxyCore) {
     var summary by rememberSaveable { mutableStateOf("") }
     val mode = AppRoutingPolicy.savedMode(context)
     val rootList = AppRoutingPolicy.rootListEnabled(context)
+    val shizukuList = AppRoutingPolicy.shizukuListEnabled(context)
 
     SettingsSection("应用分流") {
         Text("默认关闭。可在应用列表中选择白名单或黑名单模式，并为每个应用单独指定直连/代理。", style = MaterialTheme.typography.bodyMedium)
         Text("白名单：仅勾选应用经代理，其余直连。黑名单：勾选应用直连，其余按订阅规则。", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
-        Text("当前模式：${mode.label}" + if (rootList) " · root 应用列表已开启" else "", style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.primary)
+        Text(
+            "当前模式：${mode.label}" +
+                (if (rootList) " · root 应用列表已开启" else "") +
+                (if (shizukuList) " · Shizuku 应用列表已开启" else ""),
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.primary,
+        )
+        Text(
+            "Shizuku 只能补充应用列表；创建 TUN 与路由仍需要 root。",
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
         FilledTonalButton(onClick = { opened = true }, enabled = !state.busy) { Text("选择应用") }
         if (summary.isNotEmpty()) Text(summary, style = MaterialTheme.typography.bodySmall)
     }
@@ -101,9 +114,11 @@ internal fun AppRoutingSettings(core: ProxyCore) {
 private fun AppRoutingEditor(core: ProxyCore, onClose: () -> Unit, onSaved: (String) -> Unit) {
     val context = LocalContext.current.applicationContext
     val state by core.state.collectAsStateWithLifecycle()
+    val shizukuState by ShizukuManager.state.collectAsStateWithLifecycle()
     val scope = rememberCoroutineScope()
 
     var useRoot by rememberSaveable { mutableStateOf(AppRoutingPolicy.rootListEnabled(context)) }
+    var useShizuku by rememberSaveable { mutableStateOf(AppRoutingPolicy.shizukuListEnabled(context)) }
     var snapshot by remember { mutableStateOf<AppRoutingPolicy.Snapshot?>(null) }
     var loading by remember { mutableStateOf(true) }
     var error by remember { mutableStateOf("") }
@@ -119,12 +134,12 @@ private fun AppRoutingEditor(core: ProxyCore, onClose: () -> Unit, onSaved: (Str
     val mode = runCatching { AppRoutingMode.valueOf(modeName) }.getOrDefault(AppRoutingMode.OFF)
     val filter = runCatching { AppFilter.valueOf(filterName) }.getOrDefault(AppFilter.ALL)
 
-    LaunchedEffect(useRoot, reloadKey) {
+    LaunchedEffect(useRoot, useShizuku, reloadKey, shizukuState.permission, shizukuState.bound) {
         loading = true
         error = ""
         try {
             val loaded = withContext(Dispatchers.IO) {
-                AppRoutingPolicy.editor(context, core.rootShell, useRoot)
+                AppRoutingPolicy.editor(context, core.rootShell, useRoot, useShizuku)
             }
             snapshot = loaded
             if (!seeded) {
@@ -185,7 +200,7 @@ private fun AppRoutingEditor(core: ProxyCore, onClose: () -> Unit, onSaved: (Str
                                         }.toMap()
                                         val selected = draftSelected.filterTo(mutableSetOf()) { it in valid }
                                         withContext(Dispatchers.IO) {
-                                            AppRoutingPolicy.save(context, core.rootShell, useRoot, mode, routes, selected)
+                                            AppRoutingPolicy.save(context, core.rootShell, useRoot, useShizuku, mode, routes, selected)
                                         }
                                         val running = core.state.value.running
                                         if (running) core.restart()
@@ -237,6 +252,39 @@ private fun AppRoutingEditor(core: ProxyCore, onClose: () -> Unit, onSaved: (Str
                     checked = useRoot,
                     enabled = !saving,
                 ) { useRoot = !useRoot }
+                if (shizukuState.installed) {
+                    SettingSwitchRow(
+                        title = "通过 Shizuku 读取应用列表",
+                        subtitle = "Shizuku 仅提供 shell 级应用列表；创建 TUN/路由仍需要 root。",
+                        checked = useShizuku,
+                        enabled = !saving,
+                    ) {
+                        useShizuku = !useShizuku
+                        if (useShizuku && !shizukuState.permission) ShizukuManager.requestPermission()
+                    }
+                    when {
+                        !shizukuState.running -> TextButton(
+                            onClick = { ShizukuManager.openManager() },
+                            enabled = !saving,
+                        ) { Text("打开 Shizuku 并启动服务") }
+
+                        !shizukuState.permission -> FilledTonalButton(
+                            onClick = { ShizukuManager.requestPermission() },
+                            enabled = !saving,
+                        ) { Text("授权 Shizuku") }
+
+                        else -> Text(
+                            "Shizuku 已授权（uid=${shizukuState.uid ?: "?"}，" +
+                                "${if (shizukuState.isRoot) "root" else "shell"}）" +
+                                if (shizukuState.bound) "，应用列表服务已连接" else "，正在连接应用列表服务…",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
+                    shizukuState.error?.let {
+                        Text(it, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
+                    }
+                }
                 TextButton(
                     onClick = { reloadKey++ },
                     enabled = !saving && !loading,
@@ -248,7 +296,14 @@ private fun AppRoutingEditor(core: ProxyCore, onClose: () -> Unit, onSaved: (Str
                     if (snapshot == null && !loading && !saving) {
                         if (!useRoot) {
                             FilledTonalButton(onClick = { useRoot = true }) { Text("使用 root 读取应用列表") }
-                        } else {
+                        }
+                        if (shizukuState.installed && !useShizuku) {
+                            FilledTonalButton(onClick = {
+                                useShizuku = true
+                                if (!shizukuState.permission) ShizukuManager.requestPermission()
+                            }) { Text("使用 Shizuku 读取应用列表") }
+                        }
+                        if (useRoot || useShizuku) {
                             TextButton(onClick = { reloadKey++ }) { Text("重试读取") }
                         }
                     }
@@ -264,6 +319,13 @@ private fun AppRoutingEditor(core: ProxyCore, onClose: () -> Unit, onSaved: (Str
                     return@Column
                 }
                 current.rootNotice?.let {
+                    Text(
+                        it,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = if (it.contains("失败")) MaterialTheme.colorScheme.error else MaterialTheme.colorScheme.onSurfaceVariant,
+                    )
+                }
+                current.shizukuNotice?.let {
                     Text(
                         it,
                         style = MaterialTheme.typography.bodySmall,
@@ -373,6 +435,7 @@ private fun AppRow(
                 )
                 if (app.system) Badge("系统")
                 if (app.fromRoot) Badge("Root")
+                if (app.fromShizuku) Badge("Shizuku")
             }
             Text(
                 app.pkg,
