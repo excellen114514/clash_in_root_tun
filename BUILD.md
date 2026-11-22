@@ -46,8 +46,8 @@ BUILD SUCCESSFUL
 | 项目 | x86_64 | arm64-v8a |
 |---|---|---|
 | 路径 | `app\build\outputs\apk\x86\debug\app-x86-debug.apk` | `app\build\outputs\apk\arm64\debug\app-arm64-debug.apk` |
-| 大小 | 42,718,196 字节（40.74 MiB） | 40,755,882 字节（38.87 MiB） |
-| SHA-256 | `FA9E78A11C186C504C645ED899EF4F6A8747330D48267D4F16180605444FF6B0` | `9FF097F2323C7AD761C73C7424979FBA8C8DA3A2049602087B21989DE53C613D` |
+| 大小 | 42,734,984 字节（40.75 MiB） | 40,772,602 字节（38.88 MiB） |
+| SHA-256 | `0C3222348AF017CC82F2BCF16DB959827F2D4541DF1528BFFB0600C5A41EDA97` | `4953D5B14D3FB447D9CC960D3498F0556D28ED0E978ED08C036D87946223A845` |
 | 版本 | versionCode 5 / versionName 1.0.2-beta | versionCode 5 / versionName 1.0.2-beta |
 | 签名 | debug keystore | debug keystore |
 | ABI | `x86_64` | `arm64-v8a` |
@@ -136,6 +136,17 @@ packaging {
 - 依赖：`dev.rikka.shizuku:api:13.1.5`、`dev.rikka.shizuku:provider:13.1.5`。
 - Manifest 注册 `rikka.shizuku.ShizukuProvider`，authority 为 `${applicationId}.shizuku`。
 - 通过 `ShizukuUserService`（AIDL）在 Shizuku 的 root/shell 进程里执行 `pm list packages`，用于包可见性受限时补充应用列表。
-- **TUN 仍必须 root**：ADB shell 身份没有 `CAP_NET_ADMIN`，且 `/dev/tun` 是 `system:vpn` 0660；
+- 同一 UserService 还实现了 TestNetwork TUN 实验能力：在 shell/root 进程中取得系统上下文，反射调用隐藏的
+  `android.net.TestNetworkManager.createTunInterface`，返回 `TestNetworkInterface` 的接口名和 `ParcelFileDescriptor`；
+  设置页可创建/销毁测试 TUN。
+- 该路径参考 Shizzi / HotspotXray：它们随后调用 `TetheringManager.setPreferTestNetworks(true)`，把 **热点/网络共享下游**
+  流量送入测试 TUN。它不注册 VpnService，也不会接管本机应用。
+- **本机 TUN 代理仍必须 root**：ADB shell 身份没有 `CAP_NET_ADMIN`，且 `/dev/tun` 是 `system:vpn` 0660；
   实测 `ip rule add` 为 `Operation not permitted`，`ip tuntap add` 为 `Permission denied`。
+- TestNetworkManager 的构造/获取会创建 Handler，不能直接在 Binder 线程调用；实现中把系统服务获取与
+  `createTunInterface` 放到带 Looper 的 `HandlerThread`，否则会得到
+  `Can't create handler inside thread ... that has not called Looper.prepare()`。
+- MuMu Android 12 实测：`TestNetworkManager 可用（API 32，uid=0）`，创建出 `testtun0` 并成功关闭；
+  但该镜像 `TetheringManager.setPreferTestNetworks` 不可用，热点上游链路无法在 MuMu 验证。
+- 该能力目前只做创建/销毁和兼容性探测，不把 TUN 接入代理；本地透明代理仍走 root。
 - 未安装 Shizuku 或不想使用 Shizuku 时，保持 root 应用列表/系统列表即可，不影响代理启动。

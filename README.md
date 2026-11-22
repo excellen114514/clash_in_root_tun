@@ -16,6 +16,7 @@ VPN 连接。
 - Clash YAML / base64 / 分享链接订阅；多 User-Agent 兼容
 - 节点策略组读取、切换与测速
 - 应用分流：系统应用列表、root / Shizuku 兜底列表、系统/用户标识与图标、白名单/黑名单、单应用三态
+- Shizuku 实验：应用列表回退；TestNetworkManager 测试 TUN 创建/销毁（仅热点/网络共享测试，不接管本机应用）
 - 主页面流量卡片；可在通知栏显示累计流量与速率
 - mihomo 官方稳定版检查、SHA-256 校验、下次启动切换与旧版回退
 - 日志控制台、级别过滤与日志导出
@@ -26,7 +27,7 @@ TUN 接口（`net0`）仍可被系统枚举；本项目不承诺接口级完全�
 
 - Android 8.0+（minSdk 26），需要 root（`su`）
 - JDK 17，Android SDK Platform 35 / Build-Tools 35.0.0
-- 可选：已安装并运行的 Shizuku（仅用于补充应用列表，不能替代 root）
+- 可选：已安装并运行的 Shizuku（应用列表回退 + TestNetwork TUN 实验；不能替代 root 做本机透明代理）
 - 仓库内自带 `arm64-v8a` / `x86_64` 的 mihomo v1.19.34 与 geodata；构建时按 ABI 拆分，每个 APK 只包含一个内核
 
 ## 构建
@@ -56,7 +57,10 @@ export ANDROID_HOME=/path/to/android-sdk
 - 白名单模式固定使用订阅中首个受支持的静态远端节点，暂不跟随策略组选择。
 - 设备验收以 TCP 为主；UDP / QUIC 尚未做完整端到端覆盖。
 - 未实现 TUN 接口级隐藏，目标应用仍可枚举 `net0`。
-- Shizuku 仅用于补充应用列表；ADB shell 权限无法创建 TUN/路由，TUN 代理仍必须 root（或改用 VpnService，本项目不使用）。
+- Shizuku 可补充应用列表；其 `TestNetworkManager` 路径只能创建热点/网络共享测试 TUN，不接管本机应用流量。
+  本机 TUN 透明代理仍需 root（或改用 VpnService，本项目不使用）；ADB shell 也无法直接执行 `ip rule`/`iptables`。
+- MuMu Android 12 已实测可通过 Shizuku 创建/销毁 `testtun0`（`TestNetworkManager.createTunInterface`），但该镜像的
+  `TetheringManager.setPreferTestNetworks` 不可用，因此热点上游链路未验证；不同 ROM 的 tethering 模块差异较大。
 
 ## 文档
 

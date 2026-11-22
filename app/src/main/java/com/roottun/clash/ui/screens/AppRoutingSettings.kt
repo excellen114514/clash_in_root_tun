@@ -90,7 +90,7 @@ internal fun AppRoutingSettings(core: ProxyCore) {
             color = MaterialTheme.colorScheme.primary,
         )
         Text(
-            "Shizuku 只能补充应用列表；创建 TUN 与路由仍需要 root。",
+            "Shizuku 可补充应用列表并创建测试 TUN；它不会接管本机应用，本机透明代理仍需 root。",
             style = MaterialTheme.typography.bodySmall,
             color = MaterialTheme.colorScheme.onSurfaceVariant,
         )
@@ -255,7 +255,7 @@ private fun AppRoutingEditor(core: ProxyCore, onClose: () -> Unit, onSaved: (Str
                 if (shizukuState.installed) {
                     SettingSwitchRow(
                         title = "通过 Shizuku 读取应用列表",
-                        subtitle = "Shizuku 仅提供 shell 级应用列表；创建 TUN/路由仍需要 root。",
+                        subtitle = "Shizuku 仅用于应用列表/测试 TUN；不会接管本机应用，本机透明代理仍需 root。",
                         checked = useShizuku,
                         enabled = !saving,
                     ) {

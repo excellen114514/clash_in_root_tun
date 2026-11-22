@@ -6,6 +6,7 @@ import android.content.Intent
 import android.content.ServiceConnection
 import android.content.pm.PackageManager
 import android.os.IBinder
+import android.os.ParcelFileDescriptor
 import com.roottun.clash.BuildConfig
 import java.util.concurrent.CountDownLatch
 import java.util.concurrent.TimeUnit
@@ -216,6 +217,14 @@ object ShizukuManager {
     fun listSystemPackages(userId: Int): List<String>? = withService { it.listSystemPackages(userId) }
 
     fun exec(command: String): String? = withService { it.exec(command) }
+
+    fun probeTun(): String? = withService { it.probeTun() }
+
+    fun createTun(): String? = withService { it.createTun() }
+
+    fun tunFd(): ParcelFileDescriptor? = withService { it.getTunFd() }
+
+    fun destroyTun(): String? = withService { it.destroyTun() }
 
     private fun <T> withService(block: (IShizukuService) -> T): T? {
         if (!initialized || !_state.value.permission) return null

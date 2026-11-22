@@ -36,6 +36,7 @@ import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -50,7 +51,11 @@ import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.roottun.clash.BuildConfig
 import com.roottun.clash.core.AppSettings
 import com.roottun.clash.core.ProxyCore
+import com.roottun.clash.core.ShizukuManager
 import com.roottun.clash.core.SubscriptionFetcher
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 private val seedPresets = listOf(
     "青碧" to 0xFF006A6A, "靛蓝" to 0xFF3355A2, "紫罗兰" to 0xFF6B4E9B,
@@ -69,6 +74,7 @@ internal fun SettingsScreen(core: ProxyCore) {
         ) {
             AppearanceSettings(settings)
             AppRoutingSettings(core)
+            ShizukuTunSettings()
             KernelUpdateSettings()
             SettingsSection("网络与 TUN") {
                 SettingSwitchRow("手工策略路由", "auto-route 未建立策略路由时，使用独立路由表。", settings.manualPolicyRouting) {
@@ -188,6 +194,74 @@ private fun AppearanceSettings(settings: AppSettings.State) {
                     Text(name, style = MaterialTheme.typography.labelSmall)
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun ShizukuTunSettings() {
+    val shizuku by ShizukuManager.state.collectAsStateWithLifecycle()
+    if (!shizuku.installed) return
+
+    val scope = rememberCoroutineScope()
+    var busy by rememberSaveable { mutableStateOf(false) }
+    var message by rememberSaveable { mutableStateOf("") }
+
+    fun run(action: suspend () -> String?) {
+        if (busy) return
+        busy = true
+        scope.launch {
+            val result = runCatching { withContext(Dispatchers.IO) { action() } }
+                .getOrElse { "操作失败：${it.message}" }
+            message = result ?: "Shizuku UserService 不可用；请确认 Shizuku 已运行并已授权。"
+            busy = false
+        }
+    }
+
+    SettingsSection("Shizuku TestNetwork TUN（实验）") {
+        Text(
+            "通过 Shizuku UserService 调用隐藏的 TestNetworkManager.createTunInterface，" +
+                "与 Shizzi / HotspotXray 同类路径。它创建的是热点/网络共享测试 TUN，" +
+                "不会接管本机应用；本项目本地透明代理仍需 root。",
+            style = MaterialTheme.typography.bodySmall,
+        )
+        Text(
+            when {
+                !shizuku.running -> "Shizuku 未运行"
+                !shizuku.permission -> "Shizuku 已运行，尚未授权"
+                else -> "Shizuku 已授权（uid=${shizuku.uid ?: "?"}，${if (shizuku.isRoot) "root" else "shell"}）"
+            },
+            style = MaterialTheme.typography.bodySmall,
+            color = MaterialTheme.colorScheme.primary,
+        )
+        when {
+            !shizuku.running -> FilledTonalButton(onClick = { ShizukuManager.openManager() }) {
+                Text("打开 Shizuku 并启动服务")
+            }
+            !shizuku.permission -> FilledTonalButton(onClick = { ShizukuManager.requestPermission() }) {
+                Text("授权 Shizuku")
+            }
+        }
+        Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            FilledTonalButton(
+                enabled = shizuku.permission && !busy,
+                onClick = { run { ShizukuManager.probeTun() } },
+            ) { Text("检测能力") }
+            FilledTonalButton(
+                enabled = shizuku.permission && !busy,
+                onClick = { run { ShizukuManager.createTun() } },
+            ) { Text("创建测试 TUN") }
+            TextButton(
+                enabled = shizuku.permission && !busy,
+                onClick = { run { ShizukuManager.destroyTun() } },
+            ) { Text("销毁") }
+        }
+        if (busy) Text("正在调用 Shizuku…", style = MaterialTheme.typography.bodySmall)
+        if (message.isNotEmpty()) {
+            Text(message, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
+        }
+        shizuku.error?.let {
+            Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
         }
     }
 }
