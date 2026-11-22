@@ -1,5 +1,7 @@
 # Root TUN Clash
 
+本项目的最初开发思想来自 [De4869/tunclash](https://github.com/De4869/tunclash)，感谢原作者的开源工作。
+
 > [!WARNING]
 > 本项目处于开发阶段。功能、配置格式和稳定性都可能变化，尚未经过完整安全审计。
 > 请勿用于生产环境或重要网络场景；当前发布构建使用 debug 签名，仅供测试。
