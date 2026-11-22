@@ -46,9 +46,9 @@ BUILD SUCCESSFUL
 | 项目 | x86_64 | arm64-v8a |
 |---|---|---|
 | 路径 | `app\build\outputs\apk\x86\debug\app-x86-debug.apk` | `app\build\outputs\apk\arm64\debug\app-arm64-debug.apk` |
-| 大小 | 42,734,916 字节（40.75 MiB） | 40,772,582 字节（38.88 MiB） |
-| SHA-256 | `B61A8DD7DAE4B823F933BE19ABA5A5B5074399EFD57D95A440F71DCA406F2A2A` | `0539A18B414CD9C746ED07FD6226A4609674061F10A9A6A0B0DE1585F71ABBB4` |
-| 版本 | versionCode 5 / versionName 1.0.2-beta | versionCode 5 / versionName 1.0.2-beta |
+| 大小 | 42,768,956 字节（40.79 MiB） | 40,806,514 字节（38.92 MiB） |
+| SHA-256 | `28E40783845513B775F94E1B35BBBCF2367DA296E011FD33373DE3A97B9A3D09` | `0E88BDB991FB43C1E955CDCA9EE8FEB83C38DC4C6A38B3A2FD8867876A8E279A` |
+| 版本 | versionCode 6 / versionName 1.0.0-stable | versionCode 6 / versionName 1.0.0-stable |
 | 签名 | debug keystore | debug keystore |
 | ABI | `x86_64` | `arm64-v8a` |
 | 内置资源 | `geoip.metadb` / `geosite.dat` | `geoip.metadb` / `geosite.dat` |
@@ -131,7 +131,7 @@ packaging {
 - `processX86DebugMainManifest` / `processArm64DebugMainManifest` 可能提示
   `android:extractNativeLibs should not be specified ...`，属于 AGP 的建议性警告，不影响本项目的可执行内核策略。
 
-## 7. Shizuku（可选）
+## 7. Shizuku（可选，默认隐藏）
 
 - 依赖：`dev.rikka.shizuku:api:13.1.5`、`dev.rikka.shizuku:provider:13.1.5`。
 - Manifest 注册 `rikka.shizuku.ShizukuProvider`，authority 为 `${applicationId}.shizuku`。
@@ -161,3 +161,18 @@ packaging {
 - 未安装 Shizuku 或不想使用 Shizuku 时，保持 root 应用列表/系统列表即可，不影响代理启动。
 - 无 root 提示文案已改为设备无关（Magisk / KernelSU / 模拟器开关），不再只针对 MuMu；
   日志中的 su 失败提示同步修改。
+- 入口默认隐藏：设置页「配置功能」→ 连续点击「关于」卡片 5 次，写入
+  `shizukuUnlocked=true` 后才显示 Shizuku 卡片与应用分流里的 Shizuku 开关；
+  卡片内「隐藏实验功能」会写回 `false`。
+
+## 8. 自定义 DNS 与设置分区
+
+- 设置模型见 [AppSettings.kt](app/src/main/java/com/roottun/clash/core/AppSettings.kt)：
+  `dnsPreset`（CN / GOOGLE / CLOUDFLARE / CUSTOM）、`customDns`（逗号或换行分隔）。
+- [Dns.kt](app/src/main/java/com/roottun/clash/core/Dns.kt) 负责校验（IP、`https://`、`tls://`、主机名）与
+  生成 `nameserver`；参考 tunclash，始终追加国内兜底 `https://dns.alidns.com/dns-query` / `223.5.5.5`。
+- 生成配置同时写入 `default-nameserver` 与 `proxy-server-nameserver`（固定国内），
+  避免自定义外网 DoH 在隧道建立前无法解析节点域名。
+- 设置页分为「风格化 / 配置功能」：风格化为动态取色、深色模式、基准色、色彩对比度（SPEC_2025
+  contrastLevel）、圆角（Shapes）与卡片样式（CompositionLocal `LocalCardStyle`）；
+  配置功能为应用分流、DNS、网络与 TUN、订阅请求、内核更新、关于。

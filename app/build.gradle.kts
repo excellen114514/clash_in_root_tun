@@ -15,8 +15,8 @@ android {
         applicationId = "com.roottun.clash"
         minSdk = 26
         targetSdk = 35
-        versionCode = 5
-        versionName = "1.0.2-beta"
+        versionCode = 6
+        versionName = "1.0.0-stable"
     }
 
     // 每个 APK 只携带一个 ABI 对应的 mihomo 内核，避免 universal APK 同时打包两份内核。

@@ -18,8 +18,12 @@ VPN 连接。
 - 应用分流：系统应用列表、root / Shizuku 兜底列表、系统/用户标识与图标、白名单/黑名单、单应用三态
 - Shizuku 实验：应用列表回退；TestNetworkManager 测试 TUN 创建/销毁（仅热点/网络共享测试，不接管本机应用）
 - 主页面流量卡片；可在通知栏显示累计流量与速率
+- 自定义 DNS：国内 / Google / Cloudflare 预设，或逐条填写 IP、DoH、DoT；始终保留国内兜底
+- 设置页分为「风格化 / 配置功能」两个分区；风格化支持动态取色、深色模式、基准色、色彩对比度、圆角与卡片样式
 - mihomo 官方稳定版检查、SHA-256 校验、下次启动切换与旧版回退
 - 日志控制台、级别过滤与日志导出
+
+> Shizuku 相关配置默认隐藏，连续点击设置页「关于」卡片 5 次后显示；再次点击「隐藏实验功能」可收起。
 
 TUN 接口（`net0`）仍可被系统枚举；本项目不承诺接口级完全隐藏。
 
@@ -49,7 +53,8 @@ export ANDROID_HOME=/path/to/android-sdk
 ## CI 与 Release
 
 - [`.github/workflows/android.yml`](.github/workflows/android.yml)：推送 `main` 或手动触发时构建 x86_64 / arm64-v8a 两个 APK，并运行 JVM 单测。
-- 构建成功后更新 `pre` 标签的 pre-release，附带 `RootTunClash-x86_64-pre.apk` 与 `RootTunClash-arm64-v8a-pre.apk`；两个包均使用 debug 签名，仅供测试。
+- 构建成功后按 `versionName` 创建正式 release（`v1.0.0-stable` → 标签 `v1.0.0-stable`），附带
+  `RootTunClash-<version>-x86_64.apk` 与 `RootTunClash-<version>-arm64-v8a.apk`；两个包均使用 debug 签名，仅供测试。
 - Pull Request 只跑构建，不发布。
 
 ## 已知限制
@@ -73,7 +78,7 @@ export ANDROID_HOME=/path/to/android-sdk
 
 ## 状态
 
-当前版本 `1.0.2-beta`（versionCode 5），开发中。欢迎通过 issue 反馈问题；提交 PR 前请确保
+当前版本 `1.0.0-stable`（versionCode 6）。欢迎通过 issue 反馈问题；提交 PR 前请确保
 `:app:testX86DebugUnitTest` 通过。
 
 ## 许可证

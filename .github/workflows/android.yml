@@ -14,6 +14,8 @@ jobs:
     name: Build ABI APKs
     runs-on: ubuntu-24.04
     timeout-minutes: 30
+    outputs:
+      version: ${{ steps.version.outputs.version }}
     steps:
       - name: Checkout
         uses: actions/checkout@v7
@@ -34,6 +36,13 @@ jobs:
           test -d "${ANDROID_HOME}/platforms/android-35"
           test -d "${ANDROID_HOME}/build-tools/35.0.0"
 
+      - name: Resolve version
+        id: version
+        run: |
+          version=$(grep -m1 'versionName' app/build.gradle.kts | sed -E 's/.*"([^"]+)".*/\1/')
+          echo "version=${version}" >> "$GITHUB_OUTPUT"
+          echo "构建版本：${version}"
+
       - name: Build ABI APKs and run JVM tests
         run: |
           chmod +x gradlew
@@ -41,20 +50,20 @@ jobs:
 
       - name: Prepare release assets
         run: |
-          cp app/build/outputs/apk/x86/debug/app-x86-debug.apk RootTunClash-x86_64-pre.apk
-          cp app/build/outputs/apk/arm64/debug/app-arm64-debug.apk RootTunClash-arm64-v8a-pre.apk
+          cp app/build/outputs/apk/x86/debug/app-x86-debug.apk "RootTunClash-${{ steps.version.outputs.version }}-x86_64.apk"
+          cp app/build/outputs/apk/arm64/debug/app-arm64-debug.apk "RootTunClash-${{ steps.version.outputs.version }}-arm64-v8a.apk"
 
       - name: Upload build artifacts
         uses: actions/upload-artifact@v7
         with:
-          name: RootTunClash-pre
+          name: RootTunClash-apks
           path: |
-            RootTunClash-x86_64-pre.apk
-            RootTunClash-arm64-v8a-pre.apk
+            RootTunClash-${{ steps.version.outputs.version }}-x86_64.apk
+            RootTunClash-${{ steps.version.outputs.version }}-arm64-v8a.apk
           if-no-files-found: error
 
   release:
-    name: Publish pre tag
+    name: Publish stable release
     if: >-
       github.event_name == 'workflow_dispatch' ||
       (github.event_name == 'push' && github.ref == 'refs/heads/main')
@@ -67,31 +76,40 @@ jobs:
       - name: Download APKs
         uses: actions/download-artifact@v8
         with:
-          name: RootTunClash-pre
+          name: RootTunClash-apks
           path: .
 
-      - name: Remove old universal asset
+      - name: Remove legacy universal asset
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release delete-asset pre RootTunClash-pre.apk --repo "$GITHUB_REPOSITORY" --yes || true
+        run: |
+          gh release delete-asset "v${{ needs.build.outputs.version }}" RootTunClash-pre.apk \
+            --repo "$GITHUB_REPOSITORY" --yes || true
 
-      - name: Update pre-release
+      - name: Publish release
         uses: softprops/action-gh-release@v3
         with:
-          tag_name: pre
-          name: Development pre-release
-          prerelease: true
-          make_latest: false
+          tag_name: v${{ needs.build.outputs.version }}
+          name: RootTunClash ${{ needs.build.outputs.version }}
+          prerelease: false
+          make_latest: true
           overwrite_files: true
           files: |
-            RootTunClash-x86_64-pre.apk
-            RootTunClash-arm64-v8a-pre.apk
+            RootTunClash-${{ needs.build.outputs.version }}-x86_64.apk
+            RootTunClash-${{ needs.build.outputs.version }}-arm64-v8a.apk
           body: |
             > [!WARNING]
-            > 开发阶段自动构建，功能与稳定性可能变化；APK 使用 debug 签名，仅供测试。
-            > 请安装与设备 ABI 匹配的 APK，两个包使用同一包名，不能同时安装。
+            > APK 使用 debug 签名，仅供测试与自用；请安装与设备 ABI 匹配的包，两个包使用同一包名，不能同时安装。
+
+            ## 本版内容
+            - 设置页拆分为「风格化 / 配置功能」两个分区
+            - 新增自定义 DNS（支持 IP、DoH、DoT，内置国内兜底）
+            - 新增 MD3 风格选项：色彩对比度、圆角、卡片样式
+            - Shizuku 相关配置默认隐藏，连续点击「关于」卡片 5 次后显示
+
+            ## 安装
+            - `arm64-v8a`：绝大多数现代手机（推荐）
+            - `x86_64`：模拟器 / x86 平板
 
             - Commit: `${{ github.sha }}`
             - Workflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-            - `x86_64`: `RootTunClash-x86_64-pre.apk`
-            - `arm64-v8a`: `RootTunClash-arm64-v8a-pre.apk`

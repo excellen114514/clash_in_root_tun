@@ -275,6 +275,7 @@ class ProxyCore private constructor(private val context: Context) {
             tunStack = settings.tunStack,
             tunMtu = effectiveTunMtu(settings.tunMtu),
             strictRoute = settings.strictRoute,
+            dnsNameservers = Dns.nameservers(settings),
             controllerSocketPath = Workspace.controllerSocket.absolutePath,
         )
 

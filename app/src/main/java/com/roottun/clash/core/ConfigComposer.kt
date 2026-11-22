@@ -11,6 +11,8 @@ data class RuntimeOptions(
     val tunMtu: Int = 1500,
     val strictRoute: Boolean = true,
     val enableTun: Boolean = true,
+    /** 已解析好的 DNS 列表（IP / DoH / DoT），由 [Dns.nameservers] 生成。 */
+    val dnsNameservers: List<String> = Dns.FALLBACK,
     val appRouting: ResolvedAppRouting = ResolvedAppRouting(),
 )
 
@@ -166,9 +168,15 @@ object ConfigComposer {
         appendLine("  default-nameserver:")
         appendLine("    - 223.5.5.5")
         appendLine("    - 119.29.29.29")
-        appendLine("  nameserver:")
+        // 节点域名/订阅域名必须用国内 DNS 解析：否则自定义的外网 DoH 在隧道建立前不可达，
+        // 会导致内核解析代理服务器域名超时。该列表交给 mihomo 在拨号前使用。
+        appendLine("  proxy-server-nameserver:")
         appendLine("    - 223.5.5.5")
         appendLine("    - 119.29.29.29")
+        appendLine("  nameserver:")
+        val servers = opts.dnsNameservers.map { it.trim() }.filter { it.isNotEmpty() }.distinct()
+            .ifEmpty { Dns.FALLBACK }
+        servers.forEach { appendLine("    - ${YamlWrite.quote(it)}") }
         if (opts.enableTun) {
             appendLine("tun:")
             appendLine("  enable: true")
