@@ -114,11 +114,12 @@ private fun AppRoutingEditor(core: ProxyCore, onClose: () -> Unit, onSaved: (Str
     var query by rememberSaveable { mutableStateOf("") }
     var filterName by rememberSaveable { mutableStateOf(AppFilter.ALL.name) }
     var saving by remember { mutableStateOf(false) }
+    var reloadKey by remember { mutableStateOf(0) }
 
     val mode = runCatching { AppRoutingMode.valueOf(modeName) }.getOrDefault(AppRoutingMode.OFF)
     val filter = runCatching { AppFilter.valueOf(filterName) }.getOrDefault(AppFilter.ALL)
 
-    LaunchedEffect(useRoot) {
+    LaunchedEffect(useRoot, reloadKey) {
         loading = true
         error = ""
         try {
@@ -210,20 +211,6 @@ private fun AppRoutingEditor(core: ProxyCore, onClose: () -> Unit, onSaved: (Str
                 Modifier.fillMaxSize().padding(padding).padding(horizontal = 16.dp),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                if (error.isNotEmpty()) {
-                    Text(error, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
-                }
-                if (loading) {
-                    LinearProgressIndicator(Modifier.fillMaxWidth())
-                    Text("正在读取应用列表…", style = MaterialTheme.typography.bodySmall)
-                    return@Column
-                }
-                val current = snapshot
-                if (current == null) {
-                    Text("没有可用的应用列表。", style = MaterialTheme.typography.bodyMedium)
-                    return@Column
-                }
-
                 Text("工作模式", style = MaterialTheme.typography.labelLarge)
                 Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                     AppRoutingMode.entries.forEach { target ->
@@ -250,6 +237,32 @@ private fun AppRoutingEditor(core: ProxyCore, onClose: () -> Unit, onSaved: (Str
                     checked = useRoot,
                     enabled = !saving,
                 ) { useRoot = !useRoot }
+                TextButton(
+                    onClick = { reloadKey++ },
+                    enabled = !saving && !loading,
+                ) { Text("重新读取应用列表") }
+
+                if (error.isNotEmpty()) {
+                    Text(error, color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
+                    // 包可见性受限时，用户可能还没打开 root 开关；这里给出直接入口。
+                    if (snapshot == null && !loading && !saving) {
+                        if (!useRoot) {
+                            FilledTonalButton(onClick = { useRoot = true }) { Text("使用 root 读取应用列表") }
+                        } else {
+                            TextButton(onClick = { reloadKey++ }) { Text("重试读取") }
+                        }
+                    }
+                }
+                if (loading) {
+                    LinearProgressIndicator(Modifier.fillMaxWidth())
+                    Text("正在读取应用列表…", style = MaterialTheme.typography.bodySmall)
+                    return@Column
+                }
+                val current = snapshot
+                if (current == null) {
+                    Text("没有可用的应用列表。", style = MaterialTheme.typography.bodyMedium)
+                    return@Column
+                }
                 current.rootNotice?.let {
                     Text(
                         it,

@@ -46,9 +46,9 @@ BUILD SUCCESSFUL
 | 项目 | x86_64 | arm64-v8a |
 |---|---|---|
 | 路径 | `app\build\outputs\apk\x86\debug\app-x86-debug.apk` | `app\build\outputs\apk\arm64\debug\app-arm64-debug.apk` |
-| 大小 | 42,676,308 字节（40.70 MiB） | 40,713,970 字节（38.83 MiB） |
-| SHA-256 | `7E678932B62F3E52FAA2581A881D216FF55FEC19F163F2021C6E834F620A905F` | `55000CE3B60AA3136D39768D2FB4A16023DA9650DA1677B162EF2F683BA389C0` |
-| 版本 | versionCode 3 / versionName 1.0.1 | versionCode 3 / versionName 1.0.1 |
+| 大小 | 43,113,316 字节（41.12 MiB） | 40,715,954 字节（38.83 MiB） |
+| SHA-256 | `8D48BCA399E80C5C669E60561BB66A94978D6F836487FC1CA0D319C59902C510` | `824E142DF75A160E82D1EA0AB72DABCEAFBD85AE80FED3903B25A6AF52B2BCB7` |
+| 版本 | versionCode 4 / versionName 1.0.2-alpha | versionCode 4 / versionName 1.0.2-alpha |
 | 签名 | debug keystore | debug keystore |
 | ABI | `x86_64` | `arm64-v8a` |
 | 内置资源 | `geoip.metadb` / `geosite.dat` | `geoip.metadb` / `geosite.dat` |
