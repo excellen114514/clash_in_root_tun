@@ -73,7 +73,7 @@ jobs:
       - name: Remove old universal asset
         env:
           GH_TOKEN: ${{ github.token }}
-        run: gh release delete-asset pre RootTunClash-pre.apk --yes || true
+        run: gh release delete-asset pre RootTunClash-pre.apk --repo "$GITHUB_REPOSITORY" --yes || true
 
       - name: Update pre-release
         uses: softprops/action-gh-release@v3
