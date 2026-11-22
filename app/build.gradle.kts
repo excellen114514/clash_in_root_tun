@@ -17,10 +17,23 @@ android {
         targetSdk = 35
         versionCode = 3
         versionName = "1.0.1"
+    }
 
-        // Mirrors the mihomo binaries that are shipped in jniLibs.
-        ndk {
-            abiFilters += listOf("arm64-v8a", "x86_64")
+    // 每个 APK 只携带一个 ABI 对应的 mihomo 内核，避免 universal APK 同时打包两份内核。
+    flavorDimensions += "abi"
+
+    productFlavors {
+        create("x86") {
+            dimension = "abi"
+            ndk {
+                abiFilters += "x86_64"
+            }
+        }
+        create("arm64") {
+            dimension = "abi"
+            ndk {
+                abiFilters += "arm64-v8a"
+            }
         }
     }
 

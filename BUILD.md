@@ -20,11 +20,14 @@ $env:JAVA_HOME   = 'C:\Program Files\Java\jdk-17'
 $env:ANDROID_HOME = 'C:\newclash\android-sdk'
 $env:ANDROID_SDK_ROOT = 'C:\newclash\android-sdk'
 
-# 日常增量构建
-.\gradlew.bat :app:assembleDebug
+# 分别构建 x86_64 与 arm64-v8a
+.\gradlew.bat :app:assembleX86Debug :app:assembleArm64Debug
 
 # 从零构建（清理中间产物）
-.\gradlew.bat clean :app:assembleDebug
+.\gradlew.bat clean :app:assembleX86Debug :app:assembleArm64Debug
+
+# JVM 单测（两个 flavor 代码相同，跑一个即可）
+.\gradlew.bat :app:testX86DebugUnitTest
 
 # 验证用探针应用（普通应用视角，单独 APK，不影响主 APK）
 .\gradlew.bat :probe:assembleDebug
@@ -38,26 +41,32 @@ BUILD SUCCESSFUL
 
 ## 3. 产物
 
-| 项目 | 值 |
-|---|---|
-| 路径 | `app\build\outputs\apk\debug\app-debug.apk` |
-| 大小 | 67,525,530 字节（64.40 MiB） |
-| SHA-256 | `D5901B4A3864F6893FF331AD550AB0D6909286EF2FA2E5941799D11DCB7F6A4E` |
-| 版本 | versionCode 3 / versionName 1.0.1 |
-| 签名 | debug keystore（可直接安装验收） |
-| ABI | `arm64-v8a`、`x86_64`（各自内置一份 mihomo v1.19.34） |
-| 内置资源 | `assets/geodata/geoip.metadb`（8.4 MB）、`geosite.dat`（4.3 MB） |
+已按 ABI 拆分，每个 APK 只含一个 mihomo 内核：
 
-APK 内的内核与地理库：
+| 项目 | x86_64 | arm64-v8a |
+|---|---|---|
+| 路径 | `app\build\outputs\apk\x86\debug\app-x86-debug.apk` | `app\build\outputs\apk\arm64\debug\app-arm64-debug.apk` |
+| 大小 | 42,676,308 字节（40.70 MiB） | 40,713,970 字节（38.83 MiB） |
+| SHA-256 | `7E678932B62F3E52FAA2581A881D216FF55FEC19F163F2021C6E834F620A905F` | `55000CE3B60AA3136D39768D2FB4A16023DA9650DA1677B162EF2F683BA389C0` |
+| 版本 | versionCode 3 / versionName 1.0.1 | versionCode 3 / versionName 1.0.1 |
+| 签名 | debug keystore | debug keystore |
+| ABI | `x86_64` | `arm64-v8a` |
+| 内置资源 | `geoip.metadb` / `geosite.dat` | `geoip.metadb` / `geosite.dat` |
+
+APK 内的内核（`aapt dump badging` 的 `native-code` 也分别只有对应 ABI）：
 
 ```
-lib/arm64-v8a/libmihomo.so   64,007,896 bytes
-lib/x86_64/libmihomo.so      68,731,248 bytes
-assets/geodata/geoip.metadb   8,434,612 bytes
-assets/geodata/geosite.dat    4,349,121 bytes
+x86_64 APK:
+  lib/x86_64/libmihomo.so              68,731,248 bytes
+  lib/x86_64/libandroidx.graphics.path.so
+
+arm64-v8a APK:
+  lib/arm64-v8a/libmihomo.so           64,007,896 bytes
+  lib/arm64-v8a/libandroidx.graphics.path.so
 ```
 
-> 没有做 ABI split，单个 APK 同时包含两种架构；MuMu（x86_64）与真机（arm64）共用同一个包。
+> MuMu 使用 x86_64 包，arm64 真机使用 arm64-v8a 包。两个 APK 使用同一包名，不能同时安装；
+> 覆盖安装时请确认签名一致。
 
 验证探针（可选，单独安装）：
 
@@ -77,13 +86,27 @@ defaultConfig {
     applicationId = "com.roottun.clash"
     minSdk = 26
     targetSdk = 35
-    ndk { abiFilters += listOf("arm64-v8a", "x86_64") }
 }
+
+flavorDimensions += "abi"
+productFlavors {
+    create("x86") {
+        dimension = "abi"
+        ndk { abiFilters += "x86_64" }
+    }
+    create("arm64") {
+        dimension = "abi"
+        ndk { abiFilters += "arm64-v8a" }
+    }
+}
+
 packaging {
     // mihomo 以可执行 ELF 形式随包，需保持“安装时解压到 nativeLibraryDir”
     jniLibs { useLegacyPackaging = true }
 }
 ```
+
+每个 flavor 的 `abiFilters` 只有一个值，因此最终 APK 只携带对应 ABI 的 `libmihomo.so`。
 
 清单中 `android:extractNativeLibs="true"` 与 `useLegacyPackaging = true` 配合，
 保证 `applicationInfo.nativeLibraryDir/libmihomo.so` 是一个可读取、可复制的真实文件，
@@ -96,14 +119,14 @@ packaging {
 | `Could not find com.github.topjohnwu.libsu:core` | 依赖必须来自 JitPack，`settings.gradle.kts` 已声明 `maven("https://jitpack.io")` |
 | `Android Gradle plugin requires Java 17` | 设置 `JAVA_HOME` 指向 JDK 17 |
 | 依赖下载慢 | `settings.gradle.kts` 已内置阿里云镜像，可继续前置 |
-| 想减小 APK | 只保留目标 ABI：修改 `ndk { abiFilters }` 与 `jniLibs` 目录 |
+| 想减小 APK | 已按 ABI 拆分；不要再把两个内核放回同一 APK，按需构建 `assembleX86Debug` 或 `assembleArm64Debug` |
 | Release 签名 | `release` 复用 debug 签名便于验收；正式分发请替换 `signingConfigs` |
 
 ## 6. 构建日志核对点
 
-- `:app:compileDebugKotlin` 通过（无 `e:` 编译错误）；
-- `:app:packageDebug` 通过；
-- `stripDebugDebugSymbols` 会提示 `Unable to strip ... libmihomo.so`，这是**预期行为**
+- `:app:compileX86DebugKotlin` / `:app:compileArm64DebugKotlin` 通过（无 `e:` 编译错误）；
+- `:app:packageX86Debug` / `:app:packageArm64Debug` 通过；
+- `stripX86DebugDebugSymbols` / `stripArm64DebugDebugSymbols` 会提示 `Unable to strip ... libmihomo.so`，这是**预期行为**
   （mihomo 是预编译 Go 二进制，不需要 strip，打包时按原样保留）；
-- `processDebugMainManifest` 可能提示 `android:extractNativeLibs should not be specified ...`，
-  属于 AGP 的建议性警告，不影响本项目的可执行内核策略。
+- `processX86DebugMainManifest` / `processArm64DebugMainManifest` 可能提示
+  `android:extractNativeLibs should not be specified ...`，属于 AGP 的建议性警告，不影响本项目的可执行内核策略。

@@ -26,23 +26,28 @@ TUN 接口（`net0`）仍可被系统枚举；本项目不承诺接口级完全�
 
 - Android 8.0+（minSdk 26），需要 root（`su`）
 - JDK 17，Android SDK Platform 35 / Build-Tools 35.0.0
-- 仓库内自带 `arm64-v8a` / `x86_64` 的 mihomo v1.19.34 与 geodata，仓库体积较大
+- 仓库内自带 `arm64-v8a` / `x86_64` 的 mihomo v1.19.34 与 geodata；构建时按 ABI 拆分，每个 APK 只包含一个内核
 
 ## 构建
 
 ```bash
 export JAVA_HOME=/path/to/jdk-17
 export ANDROID_HOME=/path/to/android-sdk
-./gradlew :app:assembleDebug
+./gradlew :app:assembleX86Debug :app:assembleArm64Debug
 ```
 
-产物：`app/build/outputs/apk/debug/app-debug.apk`。Windows 与详细说明见
+产物：
+
+- `app/build/outputs/apk/x86/debug/app-x86-debug.apk`
+- `app/build/outputs/apk/arm64/debug/app-arm64-debug.apk`
+
+请安装与设备 ABI 匹配的 APK；两个包使用同一包名，不能同时安装。Windows 与详细说明见
 [BUILD.md](BUILD.md)。
 
 ## CI 与 Release
 
-- [`.github/workflows/android.yml`](.github/workflows/android.yml)：推送 `main` 或手动触发时构建并运行 JVM 单测。
-- 构建成功后更新 `pre` 标签的 pre-release，附带 `RootTunClash-pre.apk`；该包使用 debug 签名，仅供测试。
+- [`.github/workflows/android.yml`](.github/workflows/android.yml)：推送 `main` 或手动触发时构建 x86_64 / arm64-v8a 两个 APK，并运行 JVM 单测。
+- 构建成功后更新 `pre` 标签的 pre-release，附带 `RootTunClash-x86_64-pre.apk` 与 `RootTunClash-arm64-v8a-pre.apk`；两个包均使用 debug 签名，仅供测试。
 - Pull Request 只跑构建，不发布。
 
 ## 已知限制

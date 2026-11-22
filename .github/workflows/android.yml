@@ -11,7 +11,7 @@ permissions:
 
 jobs:
   build:
-    name: Build debug APK
+    name: Build ABI APKs
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
@@ -34,19 +34,23 @@ jobs:
           test -d "${ANDROID_HOME}/platforms/android-35"
           test -d "${ANDROID_HOME}/build-tools/35.0.0"
 
-      - name: Build and run JVM tests
+      - name: Build ABI APKs and run JVM tests
         run: |
           chmod +x gradlew
-          ./gradlew --no-daemon :app:testDebugUnitTest :app:assembleDebug
+          ./gradlew --no-daemon :app:testX86DebugUnitTest :app:assembleX86Debug :app:assembleArm64Debug
 
-      - name: Prepare release asset
-        run: cp app/build/outputs/apk/debug/app-debug.apk RootTunClash-pre.apk
+      - name: Prepare release assets
+        run: |
+          cp app/build/outputs/apk/x86/debug/app-x86-debug.apk RootTunClash-x86_64-pre.apk
+          cp app/build/outputs/apk/arm64/debug/app-arm64-debug.apk RootTunClash-arm64-v8a-pre.apk
 
-      - name: Upload build artifact
+      - name: Upload build artifacts
         uses: actions/upload-artifact@v7
         with:
           name: RootTunClash-pre
-          path: RootTunClash-pre.apk
+          path: |
+            RootTunClash-x86_64-pre.apk
+            RootTunClash-arm64-v8a-pre.apk
           if-no-files-found: error
 
   release:
@@ -60,11 +64,16 @@ jobs:
     permissions:
       contents: write
     steps:
-      - name: Download APK
+      - name: Download APKs
         uses: actions/download-artifact@v8
         with:
           name: RootTunClash-pre
           path: .
+
+      - name: Remove old universal asset
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: gh release delete-asset pre RootTunClash-pre.apk --yes || true
 
       - name: Update pre-release
         uses: softprops/action-gh-release@v3
@@ -74,11 +83,15 @@ jobs:
           prerelease: true
           make_latest: false
           overwrite_files: true
-          files: RootTunClash-pre.apk
+          files: |
+            RootTunClash-x86_64-pre.apk
+            RootTunClash-arm64-v8a-pre.apk
           body: |
             > [!WARNING]
             > 开发阶段自动构建，功能与稳定性可能变化；APK 使用 debug 签名，仅供测试。
+            > 请安装与设备 ABI 匹配的 APK，两个包使用同一包名，不能同时安装。
 
             - Commit: `${{ github.sha }}`
             - Workflow: ${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}
-            - 产物: `RootTunClash-pre.apk`
+            - `x86_64`: `RootTunClash-x86_64-pre.apk`
+            - `arm64-v8a`: `RootTunClash-arm64-v8a-pre.apk`
